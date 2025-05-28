@@ -3,9 +3,9 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-date_default_timezone_set('Europe/Istanbul'); // Zaman dilimi ayarı
+date_default_timezone_set('Europe/Istanbul'); 
 
-// --- DEBUG BAŞLANGICI ---
+
 echo "<div style='background-color: #fff3cd; padding: 10px; border: 1px solid #ffeeba; margin-bottom: 10px;'>";
 echo "<h3>my_tickets.php DEBUG Bilgileri:</h3>";
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
@@ -15,14 +15,14 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
         echo "Oturumdaki Customer ID: <strong>" . htmlspecialchars($debug_customer_id) . "</strong><br>";
     } else {
         echo "HATA: Oturumda 'customer_id' bulunamadı!<br>";
-        $debug_customer_id = 'BULUNAMADI'; // Eğer yoksa debug için bir placeholder
+        $debug_customer_id = 'BULUNAMADI'; 
     }
 } else {
     echo "HATA: Kullanıcı oturum açmamış veya oturum süresi dolmuş. Lütfen tekrar giriş yapın.<br>";
-    $debug_customer_id = 'GİRİŞ_YAPMAMIŞ'; // Eğer giriş yapmamışsa debug için
+    $debug_customer_id = 'GİRİŞ_YAPMAMIŞ'; 
 }
 echo "</div>";
-// --- DEBUG SONU ---
+
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: ../login.php");
@@ -34,13 +34,13 @@ include '../includes/db.php';
 $message = '';
 $tickets = [];
 
-$customer_id = $_SESSION['customer_id']; // Oturumdaki müşteri ID'sini al
+$customer_id = $_SESSION['customer_id']; 
 
-// Müşterinin biletlerini çekmek için SQL sorgusu
+
 $sql = "SELECT
             TI.ticket_id,
-            P.payment_date,  -- Ödeme tarihini biletin satın alma tarihi olarak kullanıyoruz
-            P.amount as ticket_price, -- Ödeme miktarını biletin fiyatı olarak alıyoruz
+            P.payment_date, 
+            P.amount as ticket_price, 
             T.departure_time,
             L.start_location,
             L.end_location,
@@ -52,9 +52,9 @@ $sql = "SELECT
         JOIN
             PAYMENT P ON TI.payment_id = P.payment_id
         JOIN
-            CUSTOMER C ON P.customer_id = C.customer_id -- Müşterinin biletlerini filtrelemek için
+            CUSTOMER C ON P.customer_id = C.customer_id 
         JOIN
-            TRIP_TICKET_RELATION TTR ON TI.ticket_id = TTR.ticket_id -- Bilet ile Sefer ilişkisi
+            TRIP_TICKET_RELATION TTR ON TI.ticket_id = TTR.ticket_id 
         JOIN
             TRIP T ON TTR.trip_id = T.trip_id
         JOIN
@@ -64,18 +64,17 @@ $sql = "SELECT
         JOIN
             DRIVER D ON T.driver_id = D.driver_id
         WHERE
-            C.customer_id = ? -- Sadece oturumdaki müşterinin biletlerini getir
+            C.customer_id = ? 
         ORDER BY
-            T.departure_time DESC"; // Kalkış zamanına göre azalan sıralama (en yakın seferler başta)
+            T.departure_time DESC"; 
 
-// --- DEBUG İÇİN ÇALIŞTIRILACAK SORGUNUN ÇIKTISI ---
-// Bu sadece debug amaçlıdır, gerçek uygulamada böyle bir string replace yapmayın.
+
 $debug_sql_with_value = str_replace("?", $conn->real_escape_string($customer_id), $sql);
 echo "<div style='background-color: #f8d7da; padding: 10px; border: 1px solid #f5c6cb; margin-bottom: 10px;'>";
 echo "<h3>my_tickets.php SQL Debug:</h3>";
 echo "Veritabanına gönderilecek SQL Sorgusu: <pre>" . htmlspecialchars($debug_sql_with_value) . "</pre>";
 echo "</div>";
-// --- DEBUG SONU ---
+
 
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
@@ -85,16 +84,15 @@ if ($stmt === false) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // --- DEBUG İÇİN SONUÇ SAYISINI YAZDIR ---
+    
     echo "<div style='background-color: #d4edda; padding: 10px; border: 1px solid #c3e6cb; margin-bottom: 10px;'>";
     echo "<h3>my_tickets.php Sonuç Debug:</h3>";
     echo "Sorgudan dönen sonuç sayısı: <strong>" . $result->num_rows . "</strong><br>";
     echo "</div>";
-    // --- DEBUG SONU ---
-
+    
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $tickets[] = $row; // Biletleri diziye ekle
+            $tickets[] = $row; 
         }
     } else {
         $message = "<div class='info'>Henüz satın alınmış bir biletiniz bulunmamaktadır.</div>";
@@ -102,7 +100,7 @@ if ($stmt === false) {
     $stmt->close();
 }
 
-// Navbar için kullanıcı adı ve soyadını oturumdan al
+
 $display_user_name = '';
 if (isset($_SESSION['name']) && isset($_SESSION['surname'])) {
     $display_user_name = htmlspecialchars($_SESSION['name'] . ' ' . $_SESSION['surname']);

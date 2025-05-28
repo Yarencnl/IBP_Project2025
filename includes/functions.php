@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['user_type'] !== 'admin') {
-    header("Location: ../login.php"); // Yönetici değilse giriş sayfasına yönlendir
+    header("Location: ../login.php"); 
     exit();
 }
-include '../includes/db.php'; // Veritabanı bağlantısı
-$message = ''; // İşlem mesajları için
+include '../includes/db.php'; 
+$message = ''; 
 ?>
 
 <h3>Yeni Kayıt Ekle</h3>
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_driver'])) {
     </thead>
     <tbody>
         <?php
-        // Veritabanından verileri çek ve listele
+        
         $result = $conn->query("SELECT * FROM YOUR_TABLE_NAME");
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -81,7 +81,7 @@ if (isset($_GET['delete_id'])) {
 }
 
 <?php
-// Güvenlik ve DB bağlantısı
+
 if (isset($_GET['id'])) {
     $driver_id = $_GET['id'];
     $stmt = $conn->prepare("SELECT name, surname, phone_number FROM DRIVER WHERE driver_id = ?");
@@ -91,7 +91,7 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $driver = $result->fetch_assoc();
     } else {
-        // Hata: Sürücü bulunamadı
+        
         header("Location: manage_drivers.php");
         exit();
     }
@@ -99,7 +99,7 @@ if (isset($_GET['id'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_driver'])) {
-    $driver_id = $_POST['driver_id']; // Gizli inputtan gelecek
+    $driver_id = $_POST['driver_id']; 
     $name = $conn->real_escape_string($_POST['name']);
     $surname = $conn->real_escape_string($_POST['surname']);
     $phone_number = $conn->real_escape_string($_POST['phone_number']);
@@ -108,8 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_driver'])) {
     $stmt->bind_param("sssi", $name, $surname, $phone_number, $driver_id);
     if ($stmt->execute()) {
         $message = "<div class='success'>Sürücü başarıyla güncellendi.</div>";
-        // İsteğe bağlı: manage_drivers.php'ye geri yönlendir
-        // header("Location: manage_drivers.php"); exit();
+        
     } else {
         $message = "<div class='error'>Güncelleme sırasında hata oluştu: " . $stmt->error . "</div>";
     }
@@ -126,23 +125,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_driver'])) {
 </form>
 
 <?php
-// SQL Injection saldırılarına karşı güvenli hale getirmek için
 function sanitize_input($conn, $data) {
     $data = trim($data);
     $data = stripslashes($data);
-    $data = htmlspecialchars($data); // HTML etiketlerini kaçış karakterlerine çevirir
-    $data = $conn->real_escape_string($data); // SQL injection'a karşı ek koruma
+    $data = htmlspecialchars($data); 
+    $data = $conn->real_escape_string($data); 
     return $data;
 }
 
-// Mesajları yazdırmak için
+
 function display_message($message) {
     if (!empty($message)) {
         echo $message;
     }
 }
 
-// Sayfa yönlendirme fonksiyonu (daha temiz kod için)
+
 function redirect_to($location) {
     header("Location: " . $location);
     exit();

@@ -9,8 +9,7 @@ $query = "SELECT T.trip_id, L.route, D.name as driver_name, D.surname as driver_
           JOIN LINE L ON T.line_id = L.line_id
           JOIN DRIVER D ON T.driver_id = D.driver_id
           JOIN VEHICLE V ON T.vehicle_id = V.vehicle_id
-          WHERE T.departure_time > NOW()"; // Sadece gelecekteki seferler
-
+          WHERE T.departure_time > NOW()"; 
 $params = [];
 $types = '';
 
@@ -21,7 +20,7 @@ if ($line_id > 0) {
 }
 
 if (!empty($filter_date)) {
-    // Yalnızca tarihi karşılaştırmak için BETWEEN kullanabiliriz
+    
     $query .= " AND DATE(T.departure_time) = ?";
     $params[] = $filter_date;
     $types .= 's';

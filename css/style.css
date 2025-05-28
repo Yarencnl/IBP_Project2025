@@ -1,40 +1,40 @@
 /* Genel Stil */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Daha modern bir font */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     margin: 0;
     padding: 0;
-    background-color: #e9ecef; /* Açık gri arka plan */
-    color: #343a40; /* Koyu gri metin rengi */
+    background-color: #e9ecef; 
+    color: #343a40; 
     line-height: 1.6;
 }
 
 .container {
-    width: 85%; /* Genişliği biraz artırdık */
-    max-width: 960px; /* Maksimum genişlik ile daha iyi kontrol */
-    margin: 30px auto; /* Üstten ve alttan biraz boşluk */
-    background-color: #ffffff; /* Beyaz kutu */
+    width: 85%; 
+    max-width: 960px; 
+    margin: 30px auto; 
+    background-color: #ffffff; 
     padding: 25px;
-    border-radius: 10px; /* Daha yumuşak köşeler */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Daha belirgin gölge */
+    border-radius: 10px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
 }
 
 h2 {
-    color: #0056b3; /* Koyu mavi başlık */
+    color: #0056b3;
     text-align: center;
     margin-bottom: 25px;
-    font-size: 2em; /* Başlık boyutunu artırdık */
-    font-weight: 600; /* Daha kalın başlık */
+    font-size: 2em; 
+    font-weight: 600; 
 }
 
 .form-group {
-    margin-bottom: 20px; /* Boşlukları artırdık */
+    margin-bottom: 20px; 
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px; /* Boşlukları artırdık */
+    margin-bottom: 8px; 
     font-weight: bold;
-    color: #495057; /* Etiket rengi */
+    color: #495057; 
 }
 
 .form-group input[type="text"],
@@ -45,37 +45,37 @@ h2 {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 12px; /* Doldurma alanını artırdık */
-    border: 1px solid #ced4da; /* Daha açık kenarlık */
-    border-radius: 5px; /* Yumuşak kenarlık */
+    padding: 12px; 
+    border: 1px solid #ced4da; 
+    border-radius: 5px; 
     box-sizing: border-box;
-    font-size: 1rem; /* Okunabilir font boyutu */
+    font-size: 1rem; 
 }
 
 button[type="submit"], .button {
-    background-color: #007bff; /* Mavi düğme */
+    background-color: #007bff; 
     color: white;
     padding: 12px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1em; /* Düğme metin boyutu */
+    font-size: 1.1em; 
     display: block;
     width: 100%;
     text-align: center;
     text-decoration: none;
-    margin-top: 20px; /* Üstten boşluk */
-    transition: background-color 0.3s ease; /* Hover efekti için geçiş */
+    margin-top: 20px; 
+    transition: background-color 0.3s ease; 
 }
 
 button[type="submit"]:hover, .button:hover {
-    background-color: #0056b3; /* Hover'da daha koyu mavi */
+    background-color: #0056b3; 
 }
 
 .error {
-    color: #dc3545; /* Kırmızı hata metni */
-    background-color: #f8d7da; /* Açık kırmızı arka plan */
-    border: 1px solid #f5c6cb; /* Kırmızı kenarlık */
+    color: #dc3545; 
+    background-color: #f8d7da; 
+    border: 1px solid #f5c6cb;
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -83,16 +83,16 @@ button[type="submit"]:hover, .button:hover {
 }
 
 .success {
-    color: #28a745; /* Yeşil başarı metni */
-    background-color: #d4edda; /* Açık yeşil arka plan */
-    border: 1px solid #c3e6cb; /* Yeşil kenarlık */
+    color: #28a745; 
+    background-color: #d4edda; 
+    border: 1px solid #c3e6cb; 
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 5px;
     font-weight: bold;
 }
 
-.info { /* my_tickets sayfasındaki "bilet bulunamadı" mesajı için */
+.info {
     color: #17a2b8;
     background-color: #d1ecf1;
     border: 1px solid #bee5eb;
@@ -102,7 +102,7 @@ button[type="submit"]:hover, .button:hover {
 }
 
 
-/* Tablo Stilleri */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -110,32 +110,32 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #dee2e6; /* Daha açık tablo kenarlığı */
+    border: 1px solid #dee2e6; 
 }
 
 th, td {
-    padding: 12px; /* Doldurma alanını artırdık */
+    padding: 12px; 
     text-align: left;
 }
 
 th {
-    background-color: #007bff; /* Başlık arka planı mavi */
+    background-color: #007bff; 
     color: white;
     font-weight: 600;
-    text-transform: uppercase; /* Başlık metnini büyük harf yaptık */
+    text-transform: uppercase;
 }
 
 tr:nth-child(even) {
-    background-color: #f8f9fa; /* Çift satırlar için çok açık gri */
+    background-color: #f8f9fa; 
 }
 
 tr:hover {
-    background-color: #e2e6ea; /* Satır üzerine gelince hafif koyulaşma */
+    background-color: #e2e6ea; 
 }
 
-/* Navigasyon Barı */
+
 .navbar {
-    background-color: #343a40; /* Koyu gri nav bar */
+    background-color: #343a40; 
     overflow: hidden;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -144,83 +144,83 @@ tr:hover {
 .navbar a {
     float: left;
     display: block;
-    color: #f8f9fa; /* Açık gri metin rengi */
+    color: #f8f9fa; 
     text-align: center;
-    padding: 15px 22px; /* Doldurma alanını artırdık */
+    padding: 15px 22px;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
     font-weight: 500;
 }
 
 .navbar a:hover {
-    background-color: #007bff; /* Hover'da mavi */
+    background-color: #007bff; 
     color: white;
 }
 
 .navbar .logout {
     float: right;
-    background-color: #dc3545; /* Çıkış butonu kırmızı */
+    background-color: #dc3545; 
     border-radius: 5px;
-    margin-right: 15px; /* Sağdan boşluk */
+    margin-right: 15px; 
 }
 
 .navbar .logout:hover {
-    background-color: #c82333; /* Hover'da daha koyu kırmızı */
+    background-color: #c82333; 
     color: white;
 }
 
-/* DEBUG kutularının stilleri */
-.debug-info { /* Ortak stil */
+
+.debug-info { 
     padding: 12px;
     border: 1px solid;
     margin-bottom: 10px;
     border-radius: 5px;
     font-size: 0.9em;
-    word-wrap: break-word; /* Uzun metinlerde satır sonu */
+    word-wrap: break-word; 
 }
 
-.debug-customer { /* #f0f8ff rengi için */
+.debug-customer { 
     background-color: #e0f2f7;
     border-color: #b3e0ed;
     color: #004d66;
 }
 
-.debug-transaction { /* #d1ecf1 rengi için */
+.debug-transaction { 
     background-color: #cce5ff;
     border-color: #a6d2ff;
     color: #004085;
 }
 
-.debug-commit { /* #d4edda rengi için */
+.debug-commit { 
     background-color: #d0f0d6;
     border-color: #9bd2a8;
     color: #155724;
 }
 
-.debug-error { /* #f8d7da rengi için */
+.debug-error { 
     background-color: #f8d7da;
     border-color: #f5c6cb;
     color: #721c24;
 }
 
-/* Giriş Sayfası için Özel Stil (Arkaplan Resmi) */
+
 .login-body {
-    background-image: url('../images/bus_background.jpg'); /* Resminizin yolu */
-    background-size: cover; /* Resmi tüm alanı kaplayacak şekilde ayarla */
-    background-position: center; /* Resmi ortala */
-    background-repeat: no-repeat; /* Resmin tekrar etmesini engelle */
-    height: 100vh; /* Tam ekran yüksekliği */
-    display: flex; /* İçeriği ortalamak için flexbox kullan */
-    justify-content: center; /* Yatayda ortala */
-    align-items: center; /* Dikeyde ortala */
+    background-image: url('../images/bus_background.jpg'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
-/* Giriş formu için özel stil */
+
 .login-container {
-    background-color: rgba(255, 255, 255, 0.9); /* Hafif şeffaf beyaz kutu */
+    background-color: rgba(255, 255, 255, 0.9); 
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px; /* Maksimum genişlik */
+    max-width: 400px; 
 }

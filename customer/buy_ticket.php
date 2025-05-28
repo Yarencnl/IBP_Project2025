@@ -3,30 +3,30 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-date_default_timezone_set('Europe/Istanbul'); // Zaman dilimi ayarı
+date_default_timezone_set('Europe/Istanbul'); 
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: ../login.php");
     exit();
 }
 
-include '../includes/db.php'; // Veritabanı bağlantısı
+include '../includes/db.php'; 
 
 $message = '';
 $trip_details = null;
 $customer_details = null;
 
-// Oturumdan müşteri ID'sini al
+
 $customer_id = $_SESSION['customer_id'];
 
-// --- DEBUG: Müşteri ID'si kontrolü ---
+
 echo "<div style='background-color: #f0f8ff; padding: 10px; border: 1px solid #d0e8f8; margin-bottom: 10px;'>";
 echo "<h3>buy_ticket.php Giriş DEBUG Bilgileri:</h3>";
 echo "Oturumdaki Customer ID: <strong>" . htmlspecialchars($customer_id) . "</strong><br>";
 echo "</div>";
-// --- DEBUG SONU ---
 
-// Müşteri bilgilerini çek
+
+
 $stmt_customer = $conn->prepare("SELECT name, surname, email, phone_number FROM CUSTOMER WHERE customer_id = ?");
 if ($stmt_customer === false) {
     $message .= "<div class='error'>Müşteri bilgileri sorgusu hazırlanamadı: " . $conn->error . "</div>";
@@ -42,11 +42,11 @@ if ($stmt_customer === false) {
     $stmt_customer->close();
 }
 
-// trip_id'yi URL'den al
+
 if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
 
-    // Seçilen seferin detaylarını çek
+    
     $sql = "SELECT
                 T.trip_id,
                 L.start_location,
@@ -56,8 +56,8 @@ if (isset($_GET['trip_id'])) {
                 D.surname as driver_surname,
                 V.plate_number,
                 V.capacity,
-                -- Fiyat TRIP tablosunda yoksa varsayılan bir değer kullanıyoruz
-                250.00 as price_per_ticket -- Örnek sabit fiyat, siz bunu TRIP tablosuna ekleyebilirsiniz
+                
+                250.00 as price_per_ticket 
             FROM
                 TRIP T
             JOIN
@@ -86,37 +86,37 @@ if (isset($_GET['trip_id'])) {
     }
 } else {
     $message = "<div class='error'>Sefer ID belirtilmedi.</div>";
-    header("Location: view_trips.php"); // Eğer trip_id yoksa, arama sayfasına geri yönlendir
+    header("Location: view_trips.php"); 
     exit();
 }
 
-// Bilet satın alma işlemi (Ödeme ve ardından Bilet kaydı)
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_purchase'])) {
-    $trip_id = $_POST['trip_id']; // Hiddenden gelen trip_id
-    $customer_id = $_SESSION['customer_id'];
-    $amount_to_pay = $trip_details['price_per_ticket']; // Yukarıda çekilen fiyattan alıyoruz
-    $payment_method = 'Kredi Kartı'; // Örnek ödeme yöntemi
 
-    // 1. PAYMENT tablosuna kayıt ekle
-    $conn->begin_transaction(); // İşlemi başlat
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_purchase'])) {
+    $trip_id = $_POST['trip_id'];
+    $customer_id = $_SESSION['customer_id'];
+    $amount_to_pay = $trip_details['price_per_ticket']; 
+    $payment_method = 'Kredi Kartı'; 
+
+    
+    $conn->begin_transaction(); 
 
     try {
         $stmt_payment = $conn->prepare("INSERT INTO PAYMENT (customer_id, amount, payment_method) VALUES (?, ?, ?)");
         if ($stmt_payment === false) {
             throw new Exception("Ödeme sorgusu hazırlanamadı: " . $conn->error);
         }
-        $stmt_payment->bind_param("ids", $customer_id, $amount_to_pay, $payment_method); // i:int, d:double, s:string
+        $stmt_payment->bind_param("ids", $customer_id, $amount_to_pay, $payment_method); 
         
         if (!$stmt_payment->execute()) {
             throw new Exception("Ödeme kaydedilirken hata oluştu: " . $stmt_payment->error);
         }
-        $payment_id = $conn->insert_id; // Yeni eklenen ödemenin ID'sini al
-        // --- DEBUG: PAYMENT ID ---
+        $payment_id = $conn->insert_id; 
+       
         echo "<div style='background-color: #d1ecf1; padding: 10px; border: 1px solid #bee5eb; margin-bottom: 5px;'>DEBUG: PAYMENT ID: <strong>" . $payment_id . "</strong></div>";
-        // --- DEBUG SONU ---
+        
         $stmt_payment->close();
 
-        // 2. TICKET tablosuna kayıt ekle (payment_id ile)
+       
         $stmt_ticket = $conn->prepare("INSERT INTO TICKET (payment_id) VALUES (?)");
         if ($stmt_ticket === false) {
             throw new Exception("Bilet sorgusu hazırlanamadı: " . $conn->error);
@@ -126,13 +126,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_purchase'])) {
         if (!$stmt_ticket->execute()) {
             throw new Exception("Bilet kaydedilirken hata oluştu: " . $stmt_ticket->error);
         }
-        $ticket_id = $conn->insert_id; // Yeni eklenen biletin ID'sini al
-        // --- DEBUG: TICKET ID ---
+        $ticket_id = $conn->insert_id; 
+       
         echo "<div style='background-color: #d1ecf1; padding: 10px; border: 1px solid #bee5eb; margin-bottom: 5px;'>DEBUG: TICKET ID: <strong>" . $ticket_id . "</strong></div>";
-        // --- DEBUG SONU ---
+        
         $stmt_ticket->close();
 
-        // 3. TRIP_TICKET_RELATION tablosuna kayıt ekle
+       
         $stmt_trip_ticket = $conn->prepare("INSERT INTO TRIP_TICKET_RELATION (trip_id, ticket_id) VALUES (?, ?)");
         if ($stmt_trip_ticket === false) {
             throw new Exception("Sefer-Bilet ilişki sorgusu hazırlanamadı: " . $conn->error);
@@ -142,31 +142,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_purchase'])) {
         if (!$stmt_trip_ticket->execute()) {
             throw new Exception("Sefer-Bilet ilişkisi kaydedilirken hata oluştu: " . $stmt_trip_ticket->error);
         }
-        // --- DEBUG: TRIP_TICKET_RELATION ---
+        
         echo "<div style='background-color: #d1ecf1; padding: 10px; border: 1px solid #bee5eb; margin-bottom: 5px;'>DEBUG: TRIP_TICKET_RELATION Eklendi (Trip ID: <strong>" . $trip_id . "</strong>, Ticket ID: <strong>" . $ticket_id . "</strong>)</div>";
-        // --- DEBUG SONU ---
+        
         $stmt_trip_ticket->close();
 
 
-        $conn->commit(); // Tüm işlemler başarılıysa onayla
-        // --- DEBUG: COMMIT BAŞARILI ---
+        $conn->commit(); 
+        
         echo "<div style='background-color: #d4edda; padding: 10px; border: 1px solid #c3e6cb; margin-bottom: 10px;'>DEBUG: Tüm İşlemler Başarılı Şekilde Commit Edildi!</div>";
-        // --- DEBUG SONU ---
+        
 
         $message = "<div class='success'>Biletiniz başarıyla satın alındı! Bilet ID: " . $ticket_id . "</div>";
         header("Location: my_tickets.php?status=success&ticket_id=" . $ticket_id);
         exit();
 
     } catch (Exception $e) {
-        $conn->rollback(); // Bir hata olursa tüm işlemleri geri al
-        // --- DEBUG: HATA OLUŞTU ---
+        $conn->rollback(); 
+        
         echo "<div style='background-color: #f8d7da; padding: 10px; border: 1px solid #f5c6cb; margin-bottom: 10px;'>DEBUG HATA: Bilet satın alınırken hata oluştu: <strong>" . $e->getMessage() . "</strong></div>";
-        // --- DEBUG SONU ---
+       
         $message = "<div class='error'>Bilet satın alınırken hata oluştu: " . $e->getMessage() . "</div>";
     }
 }
 
-// Navbar için kullanıcı adı ve soyadını oturumdan al
+
 $display_user_name = '';
 if (isset($_SESSION['name']) && isset($_SESSION['surname'])) {
     $display_user_name = htmlspecialchars($_SESSION['name'] . ' ' . $_SESSION['surname']);

@@ -4,20 +4,18 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Kullanıcı giriş yapmış mı kontrol et
+
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: ../login.php");
     exit();
 }
 
-include '../includes/db.php'; // Bir üst klasördeki db.php'yi dahil et
-
+include '../includes/db.php'; 
 $message = '';
-$trips = []; // Bulunan seferleri depolayacak
-$cities = []; // Şehirleri depolayacak
+$trips = [];
+$cities = []; 
 
-// ---- Şehirleri Veritabanından Çekme Başlangıcı ----
-// LINE tablosundan tüm benzersiz kalkış ve varış şehirlerini çek
+
 $stmt_cities = $conn->prepare("SELECT DISTINCT start_location FROM LINE UNION SELECT DISTINCT end_location FROM LINE ORDER BY 1");
 
 if ($stmt_cities === false) {
@@ -27,26 +25,25 @@ if ($stmt_cities === false) {
     $result_cities = $stmt_cities->get_result();
 
     while ($row = $result_cities->fetch_assoc()) {
-        $cities[] = $row[key($row)]; // UNION ile çekildiği için sütun adı 'start_location' veya 'end_location' olabilir, ilkini alıyoruz
+        $cities[] = $row[key($row)]; 
     }
-    // sort($cities); // Zaten sorguda ORDER BY 1 ile sıralandı
+    
     $stmt_cities->close();
 }
-// ---- Şehirleri Veritabanından Çekme Sonu ----
 
 
-// ---- Sefer Arama İşlemi Başlangıcı ----
-// Form gönderildiğinde seferleri filtrele
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_trip'])) {
     $start_location = $_POST['start_location'];
     $end_location = $_POST['end_location'];
     $departure_date = $_POST['departure_date'];
 
-    // Validasyon
+    
     if (empty($start_location) || empty($end_location) || empty($departure_date)) {
         $message = "<div class='error'>Lütfen tüm arama kriterlerini doldurunuz.</div>";
     } else {
-        // Seçilen tarihten sonraki seferleri bul
+        
         $sql = "SELECT
                     T.trip_id,
                     L.start_location,
@@ -89,9 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search_trip'])) {
         }
     }
 }
-// ---- Sefer Arama İşlemi Sonu ----
 
-// Kullanıcı adı ve soyadını oturumdan al
+
+
 $display_user_name = '';
 if (isset($_SESSION['name']) && isset($_SESSION['surname'])) {
     $display_user_name = htmlspecialchars($_SESSION['name'] . ' ' . $_SESSION['surname']);
@@ -201,11 +198,10 @@ $conn->close();
     </div>
 
     <script>
-        // Tarih inputları için minimum tarihi ayarla
+        
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('departure_date').min = today;
-            // Dönüş tarihi kısmı gizli olduğu için şimdilik ona min değeri ayarlamaya gerek yok.
         });
     </script>
 </body>

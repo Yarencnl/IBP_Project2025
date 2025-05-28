@@ -3,16 +3,16 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// Kalan register.php kodunuz
 
-session_start(); // Oturumları başlat
 
-include 'includes/db.php'; // Veritabanı bağlantımızı dahil et
+session_start(); 
 
-$message = ''; // Kullanıcıya gösterilecek mesaj
+include 'includes/db.php'; 
+
+$message = ''; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Formdan gelen verileri al
+    
     $name = $conn->real_escape_string($_POST['name']);
     $surname = $conn->real_escape_string($_POST['surname']);
     $email = $conn->real_escape_string($_POST['email']);
@@ -20,17 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // PHP Validasyonları
+    
     if (empty($name) || empty($surname) || empty($email) || empty($password) || empty($confirm_password)) {
         $message = "<div class='error'>Lütfen tüm alanları doldurunuz.</div>";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "<div class='error'>Geçerli bir e-posta adresi giriniz.</div>";
     } elseif ($password !== $confirm_password) {
         $message = "<div class='error'>Şifreler eşleşmiyor.</div>";
-    } elseif (strlen($password) < 6) { // Şifre uzunluğu kontrolü
+    } elseif (strlen($password) < 6) { 
         $message = "<div class='error'>Şifre en az 6 karakter olmalıdır.</div>";
     } else {
-        // E-posta zaten kayıtlı mı kontrol et
+        
         $stmt = $conn->prepare("SELECT customer_id FROM CUSTOMER WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -39,20 +39,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->num_rows > 0) {
             $message = "<div class='error'>Bu e-posta adresi zaten kayıtlı.</div>";
         } else {
-            // Şifreyi SHA ile hash'le (password_hash SHA-256'dan daha güvenli ve tuzlama yapar)
+            
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Veritabanına yeni müşteriyi ekle
+            
             $stmt = $conn->prepare("INSERT INTO CUSTOMER (name, surname, phone_number, email, password_hash) VALUES (?, ?, ?, ?, ?)");
-            // CUSTOMER tablonuza password_hash diye bir sütun eklemeniz gerekecek!
-            // ALTER TABLE CUSTOMER ADD COLUMN password_hash VARCHAR(255) NOT NULL;
+            
             $stmt->bind_param("sssss", $name, $surname, $phone_number, $email, $hashed_password);
 
             if ($stmt->execute()) {
                 $message = "<div class='success'>Kayıt başarıyla tamamlandı. Şimdi giriş yapabilirsiniz.</div>";
-                // Bu, mesajı görmesi için biraz zaman tanır, sonra otomatik geçer.
+                
                 header("Refresh: 3; url=login.php");
-                // header("Location: login.php"); // Direkt yönlendirmek isterseniz bunu kullanın, Refresh'i kaldırın
+               
                 exit();
             } else {
                 $message = "<div class='error'>Kayıt sırasında bir hata oluştu: " . $stmt->error . "</div>";

@@ -1,8 +1,8 @@
 <?php
 session_start();
-// Kullanıcı giriş yapmış mı kontrol et
+
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: login.php"); // Giriş yapmamışsa login sayfasına yönlendir
+    header("Location: login.php"); 
     exit();
 }
 

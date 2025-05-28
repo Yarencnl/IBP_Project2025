@@ -3,11 +3,11 @@ function filterTrips() {
     const filterDate = document.getElementById('filter_date').value;
     const tripsListDiv = document.getElementById('trips_list');
 
-    // AJAX isteği başlat
+    
     fetch(`../includes/get_filtered_trips.php?line_id=${lineId}&filter_date=${filterDate}`)
-        .then(response => response.text()) // Yanıtı metin olarak al
+        .then(response => response.text()) 
         .then(data => {
-            tripsListDiv.innerHTML = data; // Gelen HTML'i trips_list div'ine yerleştir
+            tripsListDiv.innerHTML = data; 
         })
         .catch(error => {
             console.error('Seferler filtrelenirken hata oluştu:', error);
@@ -15,5 +15,5 @@ function filterTrips() {
         });
 }
 
-// Sayfa yüklendiğinde varsayılan olarak seferleri getir
+
 document.addEventListener('DOMContentLoaded', filterTrips);

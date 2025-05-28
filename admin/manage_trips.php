@@ -1,28 +1,26 @@
 <?php
 session_start();
-// Hata raporlamayı açın (sadece geliştirme aşamasında)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Kullanıcı giriş yapmış mı ve yönetici mi kontrol et
+
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['user_type'] !== 'admin') {
-    header("Location: ../login.php"); // Yönetici değilse login sayfasına yönlendir
+    header("Location: ../login.php"); 
     exit();
 }
 
-include '../includes/db.php'; // Bir üst klasördeki db.php'yi dahil et
-
+include '../includes/db.php'; 
 $message = '';
 
-// Yeni sefer ekleme işlemi
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_trip'])) {
     $line_id = $_POST['line_id'];
     $driver_id = $_POST['driver_id'];
     $vehicle_id = $_POST['vehicle_id'];
-    $departure_time = $_POST['departure_time']; // YYYY-MM-DDTHH:MM formatında gelecek
+    $departure_time = $_POST['departure_time']; 
 
-    // Validasyonlar
+    
     if (empty($line_id) || empty($driver_id) || empty($vehicle_id) || empty($departure_time)) {
         $message = "<div class='error'>Tüm alanları doldurunuz.</div>";
     } else {
@@ -41,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_trip'])) {
     }
 }
 
-// Sefer silme işlemi
+
 if (isset($_GET['delete_trip_id'])) {
     $trip_id = $_GET['delete_trip_id'];
     $stmt = $conn->prepare("DELETE FROM TRIP WHERE trip_id = ?");
@@ -58,30 +56,29 @@ if (isset($_GET['delete_trip_id'])) {
     }
 }
 
-// Mevcut hatları çek (dropdownlar için) - ARTIK start_location ve end_location kullanıyoruz
+
 $lines = $conn->query("SELECT line_id, start_location, end_location FROM LINE");
 if ($lines === false) {
     $message .= "<div class='error'>Hatlar çekilirken hata oluştu: " . $conn->error . "</div>";
 }
 
-// Mevcut sürücüleri çek (dropdownlar için)
+
 $drivers = $conn->query("SELECT driver_id, name, surname FROM DRIVER");
 if ($drivers === false) {
     $message .= "<div class='error'>Sürücüler çekilirken hata oluştu: " . $conn->error . "</div>";
 }
 
-// Mevcut araçları çek (dropdownlar için)
-// Araç modelini de çekelim, daha bilgilendirici olur
+
 $vehicles = $conn->query("SELECT vehicle_id, plate_number, model FROM VEHICLE");
 if ($vehicles === false) {
     $message .= "<div class='error'>Araçlar çekilirken hata oluştu: " . $conn->error . "</div>";
 }
 
-// Tüm seferleri çek (listeleme için) - L.route yerine L.start_location ve L.end_location kullanıyoruz
+
 $trips_query = "SELECT
                     T.trip_id,
-                    L.start_location, -- Düzeltildi
-                    L.end_location,   -- Düzeltildi
+                    L.start_location, 
+                    L.end_location,   
                     D.name as driver_name,
                     D.surname as driver_surname,
                     V.plate_number,
@@ -96,15 +93,14 @@ if ($trips_result === false) {
     $message .= "<div class='error'>Seferler çekilirken hata oluştu: " . $conn->error . "</div>";
 }
 
-// _SESSION['user_name'] hatasını düzeltelim. login.php'de name ve surname kullanıyorduk.
+
 $display_user_name = '';
 if (isset($_SESSION['name']) && isset($_SESSION['surname'])) {
     $display_user_name = htmlspecialchars($_SESSION['name'] . ' ' . $_SESSION['surname']);
 } elseif (isset($_SESSION['user_name'])) {
-    $display_user_name = htmlspecialchars($_SESSION['user_name']); // Yedek olarak kalsın, emin değiliz
+    $display_user_name = htmlspecialchars($_SESSION['user_name']); 
 }
-// Veya sadece type gösterelim:
-// $display_user_name = htmlspecialchars($_SESSION['user_type']);
+
 
 $conn->close();
 ?>

@@ -10,7 +10,7 @@ function validateRegisterForm() {
         return false;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basit e-posta regex kontrolü
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
         alert('Lütfen geçerli bir e-posta adresi girin.');
         return false;
     }
@@ -25,7 +25,7 @@ function validateRegisterForm() {
         return false;
     }
 
-    return true; // Tüm validasyonlar başarılıysa formu gönder
+    return true; 
 }
 
 function validateLoginForm() {
